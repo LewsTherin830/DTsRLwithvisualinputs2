@@ -1,0 +1,76 @@
+{
+   "conditions": {
+        "type": "orthogonal"
+    },
+    "leaves": {
+        "params": {
+            "n_actions": 6,
+            "learning_rate": 0.1
+        },
+        "decorators": [
+            [
+                "EpsilonGreedy",
+                {
+                    "epsilon": 0.05,
+                    "decay": 0.999
+                }
+            ],
+            [
+                "NoBuffers",
+                {}
+            ],
+	    [
+		"QLambda",
+		{
+		    "decay": 0.81
+		}
+	    ]
+        ]
+    },
+    "training": {
+        "gamma": 0.9,
+        "lambda": 0.9,
+        "episodes": 1,
+        "jobs": 1,
+        "generations": 1
+    },
+    "env": {
+        "env_name": "PongNoFrameskip-v4",
+        "env_kwargs": {}
+    },
+    "gp": {
+        "pop_size": 2,
+        "cx_prob": 0.7,
+        "mut_prob": 0.3,
+        "tournament_size": 3,
+        "bounds": {
+            "input_index": {
+                "type": "int",
+                "min": 0,
+                "max": 12
+            },
+            "float": {
+                "type": "float",
+                "min": 0,
+                "max": 210
+            }
+        },
+        "max_depth": 5
+    },
+    "attention": {
+        "query_width": 5,
+        "stride": 3,
+        "n_queries": 3
+    },
+    "coevolution": {
+        "n_evaluations": 20
+    },
+    "continuous_opt": {
+        "algorithm": "UMDAc",
+        "args": {
+            "selection_size": 5,
+            "lambda_": 20,
+            "bounds": [0, 255]
+        }
+    }
+}

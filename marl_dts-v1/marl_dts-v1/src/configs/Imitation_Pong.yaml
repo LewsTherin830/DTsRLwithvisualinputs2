@@ -1,0 +1,88 @@
+Factories:
+    - class_name: UtilFactory
+      kwargs:
+        module: Cropper
+        left: 0
+        right: 0
+        top: 16
+        bottom: 0
+    - class_name: UtilFactory
+      kwargs:
+        module: Resizer
+        width: 96
+        height: 96
+    - class_name: UtilFactory
+      kwargs:
+        module: MinMaxNormalizer
+        min_: 0
+        max_: 255
+    - class_name: CVModuleFactory
+      kwargs: 
+        Optimizer:
+            class_name: CMAES
+            kwargs:
+                n_params: 150
+                lambda_: 30
+                mean: 0
+                std: 0.1
+        CVModule:
+            class_name: ConvolutionModule
+            kwargs:
+                n_filters: 2
+                filter_sizes: 5
+    - class_name: DecisionTreeFactory
+      kwargs:
+        Optimizer:
+            class_name: GeneticProgramming
+            kwargs:
+                pop_size: 200
+                cx_prob: 0
+                mut_prob: 1
+                tournament_size: 3
+                bounds:
+                    float:
+                        type: float
+                        min: 0
+                        max: 5
+                    input_index:
+                        type: int
+                        min: 0
+                        max: 4
+                    action:
+                        type: int
+                        min: 0
+                        max: 6
+                max_depth: 5
+                elitist: true
+        DecisionTree:
+            gamma: 0
+        ConditionFactory:
+            # Not used with GP
+            type: orthogonal
+        LeafFactory:
+            class_name: ConstantLeafFactory
+            kwargs:
+                n_actions: 6
+
+Mapper:
+    class: MultiProcessMapper
+    kwargs:
+        n_jobs: 8
+
+PipelineFactory:
+    class: CartesianProductPipelineFactory
+    config:
+        aggregation_fcn: mean
+
+EvolutionaryProcess:
+    generations: 1000
+
+Fitness:
+    name: ImitationTask
+    kwargs:
+        inputs:
+          - /home/leonardo/workspace/training_rl/frames_0.py.npy
+        outputs:
+          - /home/leonardo/workspace/training_rl/actions_0.py.npy
+        sampling_prob: 0.01
+    episodes: 1

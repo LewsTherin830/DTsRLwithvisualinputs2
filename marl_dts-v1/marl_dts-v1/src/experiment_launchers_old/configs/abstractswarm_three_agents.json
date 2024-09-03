@@ -1,0 +1,50 @@
+{
+    "grammar": {
+        "root": ["condition", "leaf"],
+        "condition": ["if (featureVector[<variable>] < featureVector[<variable>]) {<root>} else {<root>}"],
+        "input_index": {
+            "start": 0,
+            "stop": 6,
+            "step": 1,
+            "dtype": "int"
+        }
+    },
+    "training": {
+        "gamma": 0.95,
+        "episode_length": 500,
+        "episodes": 10,
+        "jobs": -1,
+        "generations": 100
+    },
+    "env": {
+        "env_name": "adversarial_pursuit_v2",
+        "env_kwargs": {}
+    },
+    "ge": {
+        "pop_size": 100,
+        "mutation": {
+            "type": "UniformMutator",
+            "params": {
+                "gene_probability": 0.05,
+                "max_value": 10000
+            }
+        },
+        "crossover": {
+            "type": "OnePointCrossover",
+            "params": {}
+        },
+        "selection": {
+            "type": "TournamentSelection",
+            "params": {
+                "tournament_size": 3
+            }
+        },
+        "replacement": {
+            "type": "ReplaceIfBetter",
+            "params": {}
+        },
+        "mut_prob": 1,
+        "cx_prob": 0.1,
+        "genotype_length": 100
+    }
+}

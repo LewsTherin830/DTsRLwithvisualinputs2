@@ -1,0 +1,104 @@
+Factories:
+    - class_name: UtilFactory
+      kwargs:
+        module: Cropper
+        left: 0
+        right: 0
+        top: 35
+        bottom: 0
+    - class_name: UtilFactory
+      kwargs:
+        module: Resizer
+        width: 96
+        height: 96
+    - class_name: UtilFactory
+      kwargs:
+        module: MinMaxNormalizer
+        min_: 0
+        max_: 255
+    - class_name: CVModuleFactory
+      kwargs: 
+        Optimizer:
+            class_name: CMAES
+            kwargs:
+                n_params: 150
+                lambda_: 50
+                mean: 0
+                std: 0.1
+        CVModule:
+            class_name: ConvolutionModule
+            kwargs:
+                n_filters: 2
+                filter_sizes: 5
+    - class_name: DecisionTreeFactory
+      kwargs:
+        Optimizer:
+            class_name: GeneticProgramming
+            kwargs:
+                pop_size: 50
+                cx_prob: 0
+                mut_prob: 1
+                tournament_size: 10
+                bounds:
+                    float:
+                        type: float
+                        min: 0
+                        max: 96
+                    input_index:
+                        type: int
+                        min: 0
+                        max: 4
+                    action:
+                        type: int
+                        min: 0
+                        max: 4
+                max_depth: 4
+                elitist: true
+        DecisionTree:
+            gamma: 0
+        ConditionFactory:
+            # Not used with GP
+            type: orthogonal
+        LeafFactory:
+            class_name: ConstantLeafFactory
+            kwargs:
+                n_actions: 4
+
+Mapper:
+    class: MultiMachineMapper
+    kwargs:
+      machines:
+        - hostname: hpc.unitn.it
+          username: leonardo.custode
+          command: "./launch_short.sh"
+          maximum_time: 1200
+          max_jobs: 30
+
+PipelineFactory:
+    class: CartesianProductPipelineFactory
+    config:
+        aggregation_fcn: max
+
+EvolutionaryProcess:
+    generations: 100
+
+Fitness:
+    resize: True
+    resize_to_w: 96
+    resize_to_h: 96
+    normalize_input: True
+    norm_min: 0
+    norm_max: 255
+    seeding: False # Faster
+    episode_length: null # no constraints
+    early_stopping:
+        action_patience: null
+        threshold: -7
+        assign: -21
+        positive_patience: null
+    render: False
+    env_name: Enduro-v0
+    n_episodes: 1
+    env_kwargs: {}
+    env_params: 
+        - frameskip: [1, 2]

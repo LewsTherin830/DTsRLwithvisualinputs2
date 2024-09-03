@@ -1,0 +1,80 @@
+Factories:
+    - class_name: UtilFactory
+      kwargs:
+        module: Cropper
+        left: 0
+        right: 0
+        top: 35
+        bottom: 0
+    - class_name: UtilFactory
+      kwargs:
+        module: Resizer
+        width: 96
+        height: 96
+    - class_name: FixedCVModuleFactory
+      kwargs: 
+        Path: templates/E.pkl
+        CVModule:
+            class_name: TemplateMatchingModule
+            kwargs: {}
+    - class_name: UtilFactory
+      kwargs:
+        module: LinearModel
+        predictors_path: predictors
+        window_size: 8
+    - class_name: DecisionTreeFactory
+      kwargs:
+        Optimizer:
+            class_name: GeneticProgramming
+            kwargs:
+                pop_size: 50
+                cx_prob: 0
+                mut_prob: 1
+                tournament_size: 10
+                bounds:
+                    float:
+                        type: float
+                        min: 0
+                        max: 96
+                    input_index:
+                        type: int
+                        min: 0
+                        max: 4
+                    action:
+                        type: int
+                        min: 0
+                        max: 4
+                max_depth: 4
+                elitist: true
+        DecisionTree:
+            gamma: 0
+        ConditionFactory:
+            # Not used with GP
+            type: orthogonal
+        LeafFactory:
+            class_name: ConstantLeafFactory
+            kwargs:
+                n_actions: 4
+    - class_name: UtilFactory
+      kwargs:
+        module: OneHotEncoder        
+        n_actions: 4
+
+Mapper:
+    class: MultiProcessMapper
+    kwargs:
+        n_jobs: 1
+
+PipelineFactory:
+    class: CartesianProductPipelineFactory
+    config:
+        aggregation_fcn: max
+
+EvolutionaryProcess:
+    generations: 100
+
+Fitness:
+    name: GymTask
+    episodes: 3
+    kwargs:
+      env_name: Pong-v0

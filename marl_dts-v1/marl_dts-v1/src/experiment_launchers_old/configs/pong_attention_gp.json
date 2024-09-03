@@ -1,0 +1,74 @@
+{
+   "conditions": {
+        "type": "orthogonal"
+    },
+    "leaves": {
+        "params": {
+            "n_actions": 4,
+            "learning_rate": 0.1
+        },
+        "decorators": [
+            [
+                "EpsilonGreedy",
+                {
+                    "epsilon": 0.05,
+                    "decay": 0.999
+                }
+            ],
+            [
+                "NoBuffers",
+                {}
+            ],
+	    [
+		"QLambda",
+		{
+		    "decay": 0.81
+		}
+	    ]
+        ]
+    },
+    "training": {
+        "gamma": 0.9,
+        "lambda": 0.9,
+        "episodes": 3,
+        "jobs": 1,
+        "generations": 100
+    },
+    "env": {
+        "env_name": "PongDeterministic-v4",
+        "env_kwargs": {}
+    },
+    "gp": {
+        "pop_size": 2,
+        "cx_prob": 0,
+        "mut_prob": 1,
+        "tournament_size": 10,
+        "bounds": {
+            "input_index": {
+                "type": "int",
+                "min": 0,
+                "max": 4
+            },
+            "float": {
+                "type": "float",
+                "min": 0,
+                "max": 160
+            }
+        },
+        "max_depth": 2
+    },
+    "attention": {
+        "query_width": 5,
+        "stride": 3,
+        "n_queries": 3
+    },
+    "coevolution": {
+        "n_evaluations": 2
+    },
+    "continuous_opt": {
+        "algorithm": "CMAES",
+        "args": {
+            "lambda_": 2
+        }
+    }
+}

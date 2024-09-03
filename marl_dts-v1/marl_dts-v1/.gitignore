@@ -1,0 +1,9 @@
+__pycache__
+*.sw*
+logs
+docs
+MultiMachineMapper
+predictors
+templates
+public
+.coverage

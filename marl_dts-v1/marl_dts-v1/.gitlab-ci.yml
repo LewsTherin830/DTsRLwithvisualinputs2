@@ -1,0 +1,12 @@
+image: python:3.7-alpine
+
+pages:
+    stage: deploy
+    script:
+        - pip install -U sphinx
+        - cd docs
+        - sphinx-apidoc -o ./source ../src
+        - sphinx-build -b html ./source public
+    artifacts:
+    paths:
+        - public

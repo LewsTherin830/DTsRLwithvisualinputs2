@@ -1,0 +1,94 @@
+{
+    "grammar": {
+        "root": ["condition", "leaf"],
+        "input_index": {
+            "start": 0,
+            "stop": 107,
+            "step": 1,
+            "dtype": "int"
+        },
+        "float": {
+            "start": 0,
+            "stop": 1,
+            "step": 0.1,
+            "dtype": "float"
+        }
+    },
+    "conditions": {
+        "type": "orthogonal"
+    },
+    "leaves": {
+        "params": {
+            "n_actions": 6,
+            "learning_rate": 0.05
+        },
+        "decorators": [
+            [
+                "EpsilonGreedy",
+                {
+                    "epsilon": 0.05,
+                    "decay": 1,
+                    "min_epsilon": 0.05
+                }
+            ],
+            [
+                "NoBuffers",
+                {}
+            ]
+        ]
+    },
+    "training": {
+        "gamma": 0.9,
+        "lambda": 0.9,
+        "episodes": 1,
+        "jobs": -1,
+        "generations": 100
+    },
+    "env": {
+        "env_name": "Pong-v0",
+        "env_kwargs": {}
+    },
+    "ge": {
+        "pop_size": 20,
+        "mutation": {
+            "type": "UniformMutator",
+            "params": {
+                "gene_probability": 0.2,
+                "max_value": 10000
+            }
+        },
+        "crossover": {
+            "type": "OnePointCrossover",
+            "params": {}
+        },
+        "selection": {
+            "type": "TournamentSelection",
+            "params": {
+                "tournament_size": 5
+            }
+        },
+        "replacement": {
+            "type": "ReplaceIfBetter",
+            "params": {}
+        },
+        "mut_prob": 1,
+        "cx_prob": 0.1,
+        "genotype_length": 100
+    },
+    "attention": {
+        "query_width": 5,
+        "stride": 1,
+        "n_queries": 3
+    },
+    "coevolution": {
+        "n_evaluations": 60
+    },
+    "continuous_opt": {
+        "algorithm": "UMDAc",
+        "args": {
+            "selection_size": 5,
+            "lambda_": 20,
+            "bounds": [0, 255]
+        }
+    }
+}
